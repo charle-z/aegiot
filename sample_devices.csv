@@ -1,0 +1,13 @@
+device_id,vendor,model,firmware_version,exposed_to_internet
+cam-001,Hikvision,DS-2CD2043G0-I,5.5.82_2021,true
+cam-002,Dahua,IPC-HFW1230S,2.622.0000000.7.R_2020,true
+rtr-001,TP-Link,Archer C7,v2_2019,true
+rtr-002,Ubiquiti,EdgeRouter X,2.0.9-hotfix.6_2022,false
+nas-001,QNAP,TS-231P,4.5.4_2021,true
+nas-002,Synology,DS220+,DSM 7.2_2023,false
+dvr-001,Hikvision,DS-7608NI,UNKNOWN,true
+dvr-002,Dahua,NVR4108,3.210_2018,true
+iot-001,Xiaomi,Mi Camera 2K,1.3.6_2022,false
+iot-002,Reolink,RLC-520A,v3.0.0_2021,true
+ap-001,MikroTik,hAP ac2,7.12_2024,false
+oth-001,Generic,SmartPlug X1,UNKNOWN,true

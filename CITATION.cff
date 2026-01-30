@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+title: "AegIoT - IoT Firmware Risk Mapper"
+message: "If you use this project, please cite it."
+type: software
+authors:
+  - name: "charle-z"
+version: "0.1.0"
+date-released: "2026-01-29"
+license: MIT
