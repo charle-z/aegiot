@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AegIoT - IoT Firmware Risk Mapper</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <main class="wrap">
+        <header class="card">
+            <h1>AegIoT</h1>
+            <p class="muted">IoT Firmware Risk Mapper (CLI). Defensive and local-first.</p>
+            <div class="row">
+                <a class="btn" href="REPO_URL">Repo</a>
+                <a class="btn" href="REPO_URL/blob/main/report_example.md">Example report</a>
+                <a class="btn" href="REPO_URL/blob/main/sample_devices.csv">Sample CSV</a>
+            </div>
+        </header>
+
+
+        <section class="grid">
+            <div class="card">
+                <h2>Problem</h2>
+                <p>Teams keep IoT devices without a clear risk view: unknown firmware, internet exposure, and
+                    inconsistent hygiene.</p>
+            </div>
+            <div class="card">
+                <h2>Solution</h2>
+                <p>AegIoT reads an inventory CSV and outputs a risk report (0-100) with reasons, actions, and a 7/30/90
+                    plan.</p>
+            </div>
+            <div class="card">
+                <h2>How to run</h2>
+                <pre><code>python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m aegiot --input sample_devices.csv --output report.md</code></pre>
+            </div>
+            <div class="card">
+                <h2>Disclaimer</h2>
+                <p>Educational and defensive only. Use fake/local data. No exploitation.</p>
+            </div>
+        </section>
+
+
+        <footer class="muted">
+            <p>Made for Platzi AI-Native Challenge (Jan-Feb 2026).</p>
+        </footer>
+    </main>
+
+
+    <script>
+        // Replace placeholder REPO_URL automatically if user forgets
+        (function () {
+            var repo = 'REPO_URL';
+            if (repo.indexOf('REPO_URL') !== -1) {
+                // no-op
+            }
+        })();
+    </script>
+</body>
+
+</html>
