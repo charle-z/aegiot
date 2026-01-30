@@ -3,12 +3,39 @@
 AegIoT reads a simple inventory CSV and generates a defensive risk report (0-100) per device.
 
 ## Quickstart (Windows)
-`powershell
+```powershell
 cd C:\aegiot
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m aegiot --input sample_devices.csv --output report.md
-`
+```
+
+## Run the CLI
+```powershell
+python -m aegiot --input sample_devices.csv --output report.md
+```
+
+## Package info
+aegiot is a package folder at .\aegiot.
+python -c "import aegiot; print(aegiot.__file__)" prints:
+C:\aegiot\aegiot\__init__.py
+
+## Run tests
+```powershell
+pytest -q
+```
+
+## Run status script
+```powershell
+.\scripts\status.ps1
+```
+
+## Enable GitHub Pages from /docs
+1. Open the repo on GitHub and go to Settings.
+2. Open Pages.
+3. Source: Deploy from a branch.
+4. Branch: main (or your default branch) and folder /docs.
+5. Save.
 
 ## Input CSV format
 Columns:
