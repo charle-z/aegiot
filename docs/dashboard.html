@@ -6,91 +6,152 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AegIoT RiskOps Dashboard</title>
     <link rel="stylesheet" href="style.css" />
-    <style>
-        .stack {
-            display: grid;
-            gap: 16px;
-        }
-
-        .summary-grid {
-            display: grid;
-            gap: 12px;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        }
-
-        .list {
-            margin: 0;
-            padding-left: 18px;
-        }
-
-        .pill {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 999px;
-            background: #f1f1f1;
-            font-size: 12px;
-        }
-
-        .links a {
-            margin-right: 10px;
-        }
-
-        .counts-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .counts-table th,
-        .counts-table td {
-            border: 1px solid #e6e6e6;
-            padding: 6px 8px;
-            text-align: left;
-        }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
-    <main class="wrap">
-        <header class="card">
-            <h1>AegIoT RiskOps Dashboard</h1>
-            <p class="muted">Resumen local de reportes en docs/reports.</p>
-            <div class="row">
-                <a class="btn" href="index.html">Home</a>
-                <a class="btn" href="report.html?file=reports/before.md">Report (before)</a>
-                <a class="btn" href="report.html?file=reports/after.md">Report (after)</a>
-                <a class="btn" href="report.html?file=reports/diff.md">Report (diff)</a>
-            </div>
-        </header>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="logo">AegIoT</div>
+            <div class="muted">RiskOps Dashboard</div>
+            <nav class="nav">
+                <a data-nav="index" data-i18n="nav.overview" href="index.html">Overview</a>
+                <a data-nav="dashboard" data-i18n="nav.dashboard" href="dashboard.html">Dashboard</a>
+                <a data-nav="report-before" data-i18n="nav.report_before" href="report.html?file=reports/before.md">Report (Before)</a>
+                <a data-nav="report-after" data-i18n="nav.report_after" href="report.html?file=reports/after.md">Report (After)</a>
+                <a data-nav="report-diff" data-i18n="nav.report_diff" href="report.html?file=reports/diff.md">Report (Diff)</a>
+            </nav>
+            <div class="sidebar-footer muted" data-i18n="dashboard.sidebar_footer">Live data from docs/reports/summary.json</div>
+        </aside>
 
-        <section class="card stack">
-            <div id="status" class="muted">Cargando summary.json...</div>
-            <div id="summary" class="summary-grid"></div>
-            <div>
-                <h2>Severity counts</h2>
-                <table id="counts-table" class="counts-table">
+        <main class="content">
+            <div class="topbar">
+                <div>
+                    <h1 class="page-title" data-i18n="dashboard.title">RiskOps Overview</h1>
+                    <div id="status" class="muted" data-i18n="dashboard.status_loading">Loading summary.json...</div>
+                </div>
+                <div class="actions">
+                    <a class="btn" data-i18n="dashboard.open_before" href="report.html?file=reports/before.md">Open before</a>
+                    <a class="btn secondary" data-i18n="dashboard.open_after" href="report.html?file=reports/after.md">Open after</a>
+                    <button class="btn secondary" id="lang-toggle" type="button">ES</button>
+                </div>
+            </div>
+
+            <section class="grid-3" id="summary"></section>
+
+            <section class="grid-2" style="margin-top: 18px;">
+                <div class="card">
+                    <h2 data-i18n="dashboard.severity_counts">Severity counts</h2>
+                    <table class="table" id="counts-table">
+                        <thead>
+                            <tr>
+                                <th>Scope</th>
+                                <th>LOW</th>
+                                <th>MEDIUM</th>
+                                <th>HIGH</th>
+                                <th>CRITICAL</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="card">
+                    <h2 data-i18n="dashboard.severity_chart">Severity chart</h2>
+                    <canvas id="severity-chart" height="200"></canvas>
+                    <div id="chart-fallback" class="muted note" data-i18n="dashboard.chart_unavailable" style="display:none;">Chart.js unavailable.</div>
+                </div>
+            </section>
+
+            <section class="grid-3" style="margin-top: 18px;">
+                <div class="card">
+                    <h2 data-i18n="dashboard.exposure">Exposure</h2>
+                    <canvas id="exposure-chart" height="200"></canvas>
+                </div>
+                <div class="card">
+                    <h2 data-i18n="dashboard.vendor_chart">Top vendors (avg score)</h2>
+                    <canvas id="vendor-chart" height="200"></canvas>
+                </div>
+                <div class="card">
+                    <h2 data-i18n="dashboard.score_hist">Score histogram</h2>
+                    <canvas id="score-chart" height="200"></canvas>
+                </div>
+            </section>
+
+            <section class="card" style="margin-top: 18px;">
+                <h2 data-i18n="dashboard.top_devices">Top devices</h2>
+                <div class="filters">
+                    <label class="filter-group"><span data-i18n="dashboard.filters_vendor">Vendor</span>
+                        <select id="filter-vendor" class="filter-control"></select>
+                    </label>
+                    <label class="filter-group"><span data-i18n="dashboard.filters_type">Type</span>
+                        <select id="filter-type" class="filter-control"></select>
+                    </label>
+                    <label class="filter-group"><span data-i18n="dashboard.filters_exposed">Exposed</span>
+                        <select id="filter-exposed" class="filter-control"></select>
+                    </label>
+                    <label class="filter-group"><span data-i18n="dashboard.filters_risk">Risk</span>
+                        <select id="filter-risk" class="filter-control"></select>
+                    </label>
+                    <label class="filter-group"><span data-i18n="dashboard.filters_search">Search device_id</span>
+                        <input id="filter-search" class="filter-control" data-i18n-placeholder="dashboard.filters_search" placeholder="Search device_id" />
+                    </label>
+                </div>
+                <table class="table" id="devices-table">
                     <thead>
                         <tr>
-                            <th>Scope</th>
-                            <th>LOW</th>
-                            <th>MEDIUM</th>
-                            <th>HIGH</th>
-                            <th>CRITICAL</th>
+                            <th data-i18n="dashboard.table_device">Device</th>
+                            <th data-i18n="dashboard.table_vendor">Vendor</th>
+                            <th data-i18n="dashboard.table_model">Model</th>
+                            <th data-i18n="dashboard.table_type">Type</th>
+                            <th data-i18n="dashboard.table_exposed">Exposed</th>
+                            <th data-i18n="dashboard.table_score">Score</th>
+                            <th data-i18n="dashboard.table_risk">Risk</th>
+                            <th data-i18n="dashboard.table_notes">Notes</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
-            </div>
-            <div>
-                <h2>Top 5 findings</h2>
-                <ul id="top5" class="list"></ul>
-            </div>
-            <div>
-                <h2>Report links</h2>
-                <div id="report-links" class="links"></div>
-            </div>
-        </section>
-    </main>
+            </section>
 
+            <section class="grid-2" style="margin-top: 18px;">
+                <div class="card">
+                    <h2 data-i18n="dashboard.top_findings">Top 5 findings</h2>
+                    <ul id="top5" class="list"></ul>
+                </div>
+                <div class="card">
+                    <h2 data-i18n="dashboard.run_metadata">Run metadata</h2>
+                    <table class="table" id="meta-table">
+                        <tbody>
+                            <tr>
+                                <td>generated_at</td>
+                                <td id="meta-generated">-</td>
+                            </tr>
+                            <tr>
+                                <td>git_sha</td>
+                                <td id="meta-sha">-</td>
+                            </tr>
+                            <tr>
+                                <td>run_id</td>
+                                <td id="meta-run">-</td>
+                            </tr>
+                            <tr>
+                                <td>input_fingerprint</td>
+                                <td id="meta-fingerprint">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="card" style="margin-top: 18px;">
+                <h2 data-i18n="dashboard.report_links">Report links</h2>
+                <div id="report-links" class="actions"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="i18n.js"></script>
+    <script src="nav.js"></script>
     <script>
         (function () {
             var statusEl = document.getElementById("status");
@@ -98,7 +159,21 @@
             var top5El = document.getElementById("top5");
             var linksEl = document.getElementById("report-links");
             var countsBody = document.getElementById("counts-table").querySelector("tbody");
+            var devicesBody = document.getElementById("devices-table").querySelector("tbody");
+            var vendorFilter = document.getElementById("filter-vendor");
+            var typeFilter = document.getElementById("filter-type");
+            var exposedFilter = document.getElementById("filter-exposed");
+            var riskFilter = document.getElementById("filter-risk");
+            var searchFilter = document.getElementById("filter-search");
             var summaryUrl = "reports/summary.json";
+            var devicesUrl = "reports/devices_before.json";
+
+            var allDevices = [];
+
+            function t(key, fallback) {
+                if (window.i18n && window.i18n.t) return window.i18n.t(key);
+                return fallback || key;
+            }
 
             function safeText(value) {
                 return value === undefined || value === null ? "" : String(value);
@@ -106,8 +181,8 @@
 
             function addCard(label, value) {
                 var div = document.createElement("div");
-                div.className = "card";
-                div.innerHTML = "<div class='muted'>" + safeText(label) + "</div><div><strong>" + safeText(value) + "</strong></div>";
+                div.className = "card stat";
+                div.innerHTML = "<div class='muted'>" + safeText(label) + "</div><div class='stat-value'>" + safeText(value) + "</div>";
                 summaryEl.appendChild(div);
             }
 
@@ -120,17 +195,11 @@
             }
 
             function addLink(label, path) {
-                var span = document.createElement("span");
-                if (path) {
-                    var a = document.createElement("a");
-                    a.href = "report.html?file=" + encodeURIComponent(path);
-                    a.textContent = label;
-                    a.className = "btn";
-                    span.appendChild(a);
-                } else {
-                    span.innerHTML = "<span class='pill'>" + label + " no disponible</span>";
-                }
-                linksEl.appendChild(span);
+                var a = document.createElement("a");
+                a.href = "report.html?file=" + encodeURIComponent(path);
+                a.textContent = label;
+                a.className = "btn secondary";
+                linksEl.appendChild(a);
             }
 
             function renderCountsRow(label, counts) {
@@ -146,13 +215,287 @@
                 countsBody.appendChild(tr);
             }
 
-            fetch(summaryUrl, { cache: "no-store" })
-                .then(function (res) {
-                    if (!res.ok) throw new Error("No summary.json");
-                    return res.json();
-                })
-                .then(function (data) {
-                    statusEl.textContent = "OK: summary.json cargado.";
+            function severityBadge(level) {
+                var span = document.createElement("span");
+                span.className = "badge " + safeText(level).toLowerCase();
+                span.textContent = level;
+                return span;
+            }
+
+            function renderDevices(devices) {
+                devicesBody.innerHTML = "";
+                if (!devices.length) {
+                    var emptyRow = document.createElement("tr");
+                    var emptyCell = document.createElement("td");
+                    emptyCell.colSpan = 8;
+                    emptyCell.textContent = t("dashboard.no_results", "No results for these filters.");
+                    emptyRow.appendChild(emptyCell);
+                    devicesBody.appendChild(emptyRow);
+                    return;
+                }
+                devices.slice(0, 15).forEach(function (d) {
+                    var tr = document.createElement("tr");
+                    var tdId = document.createElement("td");
+                    tdId.textContent = d.device_id;
+                    tr.appendChild(tdId);
+
+                    var tdVendor = document.createElement("td");
+                    tdVendor.textContent = d.vendor;
+                    tr.appendChild(tdVendor);
+
+                    var tdModel = document.createElement("td");
+                    tdModel.textContent = d.model;
+                    tr.appendChild(tdModel);
+
+                    var tdType = document.createElement("td");
+                    tdType.textContent = d.device_type;
+                    tr.appendChild(tdType);
+
+                    var tdExp = document.createElement("td");
+                    tdExp.textContent = d.exposed_to_internet ? t("dashboard.filters_yes", "Yes") : t("dashboard.filters_no", "No");
+                    tr.appendChild(tdExp);
+
+                    var tdScore = document.createElement("td");
+                    tdScore.textContent = d.score;
+                    tr.appendChild(tdScore);
+
+                    var tdRisk = document.createElement("td");
+                    tdRisk.appendChild(severityBadge(d.risk_level));
+                    tr.appendChild(tdRisk);
+
+                    var tdNotes = document.createElement("td");
+                    tdNotes.textContent = (d.reasons || []).slice(0, 2).join("; ");
+                    tr.appendChild(tdNotes);
+
+                    devicesBody.appendChild(tr);
+                });
+            }
+
+            function applyFilters() {
+                var vendor = vendorFilter.value;
+                var dtype = typeFilter.value;
+                var exposed = exposedFilter.value;
+                var risk = riskFilter.value;
+                var search = (searchFilter.value || "").toLowerCase();
+
+                var filtered = allDevices.filter(function (d) {
+                    if (vendor !== "all" && d.vendor !== vendor) return false;
+                    if (dtype !== "all" && d.device_type !== dtype) return false;
+                    if (exposed !== "all" && String(d.exposed_to_internet) !== exposed) return false;
+                    if (risk !== "all" && d.risk_level !== risk) return false;
+                    if (search && d.device_id.toLowerCase().indexOf(search) === -1) return false;
+                    return true;
+                });
+
+                filtered.sort(function (a, b) {
+                    if (b.score !== a.score) return b.score - a.score;
+                    return a.device_id.localeCompare(b.device_id);
+                });
+
+                renderDevices(filtered);
+            }
+
+            function fillSelect(select, values) {
+                select.innerHTML = "";
+                var allOpt = document.createElement("option");
+                allOpt.value = "all";
+                allOpt.textContent = t("dashboard.filters_all", "All");
+                select.appendChild(allOpt);
+                values.forEach(function (v) {
+                    var opt = document.createElement("option");
+                    opt.value = v;
+                    opt.textContent = v;
+                    select.appendChild(opt);
+                });
+            }
+
+            function fillExposedSelect() {
+                exposedFilter.innerHTML = "";
+                var allOpt = document.createElement("option");
+                allOpt.value = "all";
+                allOpt.textContent = t("dashboard.filters_all", "All");
+                exposedFilter.appendChild(allOpt);
+                var yesOpt = document.createElement("option");
+                yesOpt.value = "true";
+                yesOpt.textContent = t("dashboard.filters_yes", "Yes");
+                exposedFilter.appendChild(yesOpt);
+                var noOpt = document.createElement("option");
+                noOpt.value = "false";
+                noOpt.textContent = t("dashboard.filters_no", "No");
+                exposedFilter.appendChild(noOpt);
+            }
+
+            function fillRiskSelect() {
+                riskFilter.innerHTML = "";
+                var allOpt = document.createElement("option");
+                allOpt.value = "all";
+                allOpt.textContent = t("dashboard.filters_all", "All");
+                riskFilter.appendChild(allOpt);
+                ["CRITICAL", "HIGH", "MEDIUM", "LOW"].forEach(function (level) {
+                    var opt = document.createElement("option");
+                    opt.value = level;
+                    opt.textContent = level;
+                    riskFilter.appendChild(opt);
+                });
+            }
+
+            function renderChart(countsBefore, countsAfter) {
+                var canvas = document.getElementById("severity-chart");
+                if (!canvas || !window.Chart) {
+                    document.getElementById("chart-fallback").style.display = "block";
+                    return;
+                }
+                var labels = ["LOW", "MEDIUM", "HIGH", "CRITICAL"];
+                var beforeData = labels.map(function (l) { return countsBefore[l] || 0; });
+                var afterData = labels.map(function (l) { return countsAfter[l] || 0; });
+                Chart.defaults.color = "#cbd5e1";
+                Chart.defaults.borderColor = "#233044";
+                new Chart(canvas.getContext("2d"), {
+                    type: "bar",
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: t("dashboard.scope_before", "Before"),
+                                data: beforeData,
+                                backgroundColor: "rgba(59, 130, 246, 0.7)",
+                                borderColor: "rgba(59, 130, 246, 1)",
+                                borderWidth: 1
+                            },
+                            {
+                                label: t("dashboard.scope_after", "After"),
+                                data: afterData,
+                                backgroundColor: "rgba(34, 197, 94, 0.7)",
+                                borderColor: "rgba(34, 197, 94, 1)",
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { precision: 0 }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function renderExposure(exposure) {
+                var canvas = document.getElementById("exposure-chart");
+                if (!canvas || !window.Chart) return;
+                new Chart(canvas.getContext("2d"), {
+                    type: "doughnut",
+                    data: {
+                        labels: [t("dashboard.exposed_yes", "Exposed"), t("dashboard.exposed_no", "Not exposed")],
+                        datasets: [
+                            {
+                                data: [exposure.exposed_yes || 0, exposure.exposed_no || 0],
+                                backgroundColor: ["rgba(239, 68, 68, 0.7)", "rgba(34, 197, 94, 0.7)"],
+                                borderColor: ["rgba(239, 68, 68, 1)", "rgba(34, 197, 94, 1)"],
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: { responsive: true }
+                });
+            }
+
+            function renderVendorChart(byVendor) {
+                var canvas = document.getElementById("vendor-chart");
+                if (!canvas || !window.Chart) return;
+                var items = Object.keys(byVendor || {}).map(function (k) {
+                    return { vendor: k, avg: byVendor[k].avg_score || 0 };
+                });
+                items.sort(function (a, b) { return b.avg - a.avg; });
+                var top = items.slice(0, 6);
+                new Chart(canvas.getContext("2d"), {
+                    type: "bar",
+                    data: {
+                        labels: top.map(function (x) { return x.vendor; }),
+                        datasets: [
+                            {
+                                label: "Avg score",
+                                data: top.map(function (x) { return x.avg; }),
+                                backgroundColor: "rgba(59, 130, 246, 0.7)",
+                                borderColor: "rgba(59, 130, 246, 1)",
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { precision: 0 }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function renderHistogram(devices) {
+                var canvas = document.getElementById("score-chart");
+                if (!canvas || !window.Chart) return;
+                var bins = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+                var counts = new Array(bins.length - 1).fill(0);
+                devices.forEach(function (d) {
+                    var score = d.score || 0;
+                    for (var i = 0; i < bins.length - 1; i++) {
+                        if (score >= bins[i] && score < bins[i + 1]) {
+                            counts[i] += 1;
+                            break;
+                        }
+                        if (score === 100 && i === bins.length - 2) counts[i] += 1;
+                    }
+                });
+                var labels = counts.map(function (_, idx) {
+                    return bins[idx] + "-" + (bins[idx + 1] - 1);
+                });
+                new Chart(canvas.getContext("2d"), {
+                    type: "bar",
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: t("dashboard.hist_devices", "Devices"),
+                                data: counts,
+                                backgroundColor: "rgba(148, 163, 184, 0.7)",
+                                borderColor: "rgba(148, 163, 184, 1)",
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: { beginAtZero: true, ticks: { precision: 0 } }
+                        }
+                    }
+                });
+            }
+
+            function setMeta(id, value) {
+                var el = document.getElementById(id);
+                if (el) el.textContent = value || "n/a";
+            }
+
+            Promise.all([
+                fetch(summaryUrl, { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }),
+                fetch(devicesUrl, { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : []; })
+            ])
+                .then(function (results) {
+                    var data = results[0];
+                    var devices = results[1] || [];
+                    if (!data) {
+                        statusEl.textContent = t("dashboard.status_missing", "summary.json not found. Generate reports in docs/reports.");
+                        return;
+                    }
+
+                    statusEl.textContent = t("dashboard.status_ok", "OK: summary.json loaded.");
 
                     var beforeScore = data.before_overall_score;
                     if (beforeScore === undefined || beforeScore === null) {
@@ -171,19 +514,36 @@
                         }
                     }
 
-                    addCard("Risk score (Before)", beforeScore);
-                    addCard("Risk score (After)", afterScore);
-                    addCard("Risk reduction", riskReduction);
+                    addCard(t("dashboard.risk_before", "Risk score (Before)"), beforeScore);
+                    addCard(t("dashboard.risk_after", "Risk score (After)"), afterScore);
+                    addCard(t("dashboard.risk_reduction", "Risk reduction"), riskReduction);
 
                     var countsBefore = data.counts_before || data.counts || {};
                     var countsAfter = data.counts_after || {};
-                    renderCountsRow("Before", countsBefore);
-                    renderCountsRow("After", countsAfter);
+                    renderCountsRow(t("dashboard.scope_before", "Before"), countsBefore);
+                    renderCountsRow(t("dashboard.scope_after", "After"), countsAfter);
+                    renderChart(countsBefore, countsAfter);
+
+                    renderExposure(data.exposure || { exposed_yes: 0, exposed_no: 0 });
+                    renderVendorChart(data.by_vendor || {});
+                    renderHistogram(devices);
+
+                    allDevices = devices || [];
+                    fillSelect(vendorFilter, Array.from(new Set(allDevices.map(function (d) { return d.vendor; }))).sort());
+                    fillSelect(typeFilter, Array.from(new Set(allDevices.map(function (d) { return d.device_type; }))).sort());
+                    fillExposedSelect();
+                    fillRiskSelect();
+                    applyFilters();
+
+                    [vendorFilter, typeFilter, exposedFilter, riskFilter, searchFilter].forEach(function (el) {
+                        el.addEventListener("change", applyFilters);
+                        el.addEventListener("keyup", applyFilters);
+                    });
 
                     var top = data.top5 || data.top || data.findings || [];
                     if (!Array.isArray(top) || top.length === 0) {
                         var li = document.createElement("li");
-                        li.textContent = "No hay hallazgos.";
+                        li.textContent = t("dashboard.no_results", "No results for these filters.");
                         top5El.appendChild(li);
                     } else {
                         top.slice(0, 5).forEach(function (item) {
@@ -204,15 +564,17 @@
                         });
                     }
 
+                    setMeta("meta-generated", data.generated_at);
+                    setMeta("meta-sha", data.git_sha);
+                    setMeta("meta-run", data.run_id);
+                    setMeta("meta-fingerprint", data.input_fingerprint ? data.input_fingerprint.slice(0, 16) + "..." : "n/a");
+
                     addLink("before.md", pickPath(data, "before") || "reports/before.md");
                     addLink("after.md", pickPath(data, "after") || "reports/after.md");
                     addLink("diff.md", pickPath(data, "diff") || "reports/diff.md");
                 })
                 .catch(function () {
-                    statusEl.textContent = "No se encontro reports/summary.json. Genera reportes en docs/reports.";
-                    addLink("before.md", "reports/before.md");
-                    addLink("after.md", "reports/after.md");
-                    addLink("diff.md", "reports/diff.md");
+                    statusEl.textContent = t("dashboard.status_missing", "summary.json not found. Generate reports in docs/reports.");
                 });
         })();
     </script>

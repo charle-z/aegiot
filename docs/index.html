@@ -9,55 +9,63 @@
 </head>
 
 <body>
-    <main class="wrap">
-        <header class="card">
-            <h1>AegIoT</h1>
-            <p class="muted">IoT Firmware Risk Mapper (CLI). Defensive and local-first.</p>
-            <div class="row">
-                <a class="btn" id="repo-link" href="#">Repo</a>
-                <a class="btn" id="example-link" href="#">Example report</a>
-                <a class="btn" id="sample-link" href="#">Sample CSV</a>
-            </div>
-            <p id="repo-warning" class="muted" style="display:none;">No se pudo detectar el repo de GitHub para este sitio.</p>
-            <div class="row">
-                <a class="btn" href="dashboard.html">Dashboard</a>
-                <a class="btn" href="report.html?file=reports/before.md">Report (before)</a>
-                <a class="btn" href="report.html?file=reports/after.md">Report (after)</a>
-                <a class="btn" href="report.html?file=reports/diff.md">Report (diff)</a>
-            </div>
-        </header>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="logo">AegIoT</div>
+            <div class="muted">IoT Firmware Risk Mapper</div>
+            <nav class="nav">
+                <a data-nav="index" data-i18n="nav.overview" href="index.html">Overview</a>
+                <a data-nav="dashboard" data-i18n="nav.dashboard" href="dashboard.html">Dashboard</a>
+                <a data-nav="report-before" data-i18n="nav.report_before" href="report.html?file=reports/before.md">Report (Before)</a>
+                <a data-nav="report-after" data-i18n="nav.report_after" href="report.html?file=reports/after.md">Report (After)</a>
+                <a data-nav="report-diff" data-i18n="nav.report_diff" href="report.html?file=reports/diff.md">Report (Diff)</a>
+            </nav>
+            <div class="sidebar-footer muted" data-i18n="index.sidebar_footer">Defensive only. Local-first.</div>
+        </aside>
 
+        <main class="content">
+            <div class="topbar">
+                <div>
+                    <h1 class="page-title" data-i18n="index.title">Overview</h1>
+                    <div class="muted" data-i18n="index.subtitle">Clear risk signals for IoT fleets with minimal friction.</div>
+                </div>
+                <div class="actions">
+                    <a class="btn" id="repo-link" data-i18n="common.repo" href="#">Repo</a>
+                    <a class="btn secondary" id="example-link" data-i18n="common.example_report" href="#">Example report</a>
+                    <a class="btn secondary" id="sample-link" data-i18n="common.sample_csv" href="#">Sample CSV</a>
+                    <button class="btn secondary" id="lang-toggle" type="button">ES</button>
+                </div>
+            </div>
+            <div id="repo-warning" class="muted note" data-i18n="index.repo_warning" style="display:none;">GitHub repo not detected. Clone the repo for remote links.</div>
 
-        <section class="grid">
-            <div class="card">
-                <h2>Problem</h2>
-                <p>Teams keep IoT devices without a clear risk view: unknown firmware, internet exposure, and
-                    inconsistent hygiene.</p>
-            </div>
-            <div class="card">
-                <h2>Solution</h2>
-                <p>AegIoT reads an inventory CSV and outputs a risk report (0-100) with reasons, actions, and a 7/30/90
-                    plan.</p>
-            </div>
-            <div class="card">
-                <h2>How to run</h2>
-                <pre><code>python -m venv .venv
+            <section class="grid-2" style="margin-top: 18px;">
+                <div class="card">
+                    <h2 data-i18n="index.problem_title">Problem</h2>
+                    <p class="muted" data-i18n="index.problem_body">Teams keep IoT devices without a clear risk view: unknown firmware, exposure, and inconsistent hygiene.</p>
+                </div>
+                <div class="card">
+                    <h2 data-i18n="index.solution_title">Solution</h2>
+                    <p class="muted" data-i18n="index.solution_body">AegIoT reads an inventory CSV and outputs a risk report (0-100) with reasons, actions, and a 7/30/90 plan.</p>
+                </div>
+                <div class="card">
+                    <h2 data-i18n="index.quickstart_title">CLI Quickstart</h2>
+                    <details>
+                        <summary data-i18n="index.quickstart_summary">View quick steps</summary>
+                        <pre class="pre"><code>python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m aegiot --input sample_devices.csv --output report.md</code></pre>
-            </div>
-            <div class="card">
-                <h2>Disclaimer</h2>
-                <p>Educational and defensive only. Use fake/local data. No exploitation.</p>
-            </div>
-        </section>
+                    </details>
+                </div>
+                <div class="card">
+                    <h2 data-i18n="common.disclaimer_title">Disclaimer</h2>
+                    <p class="muted" data-i18n="common.disclaimer_body">Educational and defensive only. Use fake/local data. No exploitation.</p>
+                </div>
+            </section>
+        </main>
+    </div>
 
-
-        <footer class="muted">
-            <p>Made for Platzi AI-Native Challenge (Jan-Feb 2026).</p>
-        </footer>
-    </main>
-
-
+    <script src="i18n.js"></script>
+    <script src="nav.js"></script>
     <script>
         (function () {
             var host = window.location.hostname || "";
@@ -68,6 +76,9 @@ python -m aegiot --input sample_devices.csv --output report.md</code></pre>
             }
             var segments = path.split("/").filter(Boolean);
             var repo = segments.length > 0 ? segments[0] : "";
+            if (!repo && owner) {
+                repo = owner + ".github.io";
+            }
             var repoUrl = owner && repo ? "https://github.com/" + owner + "/" + repo : "";
 
             var repoLink = document.getElementById("repo-link");
@@ -82,9 +93,8 @@ python -m aegiot --input sample_devices.csv --output report.md</code></pre>
                 sampleLink.href = repoUrl + "/blob/main/sample_devices.csv";
             } else {
                 repoLink.href = "#";
-                sampleLink.href = "#";
+                sampleLink.href = "../sample_devices.csv";
                 repoLink.setAttribute("aria-disabled", "true");
-                sampleLink.setAttribute("aria-disabled", "true");
                 warning.style.display = "block";
             }
         })();

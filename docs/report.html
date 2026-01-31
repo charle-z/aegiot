@@ -7,24 +7,10 @@
     <title>AegIoT Report Viewer</title>
     <link rel="stylesheet" href="style.css" />
     <style>
-        .content {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 24px;
-        }
-
-        .toolbar {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 16px;
-        }
-
         .report {
             background: #ffffff;
-            border-radius: 12px;
-            padding: 20px;
+            border-radius: 14px;
+            padding: 22px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             color: #111;
         }
@@ -68,23 +54,69 @@
             text-align: left;
         }
 
-        .muted {
-            color: #666;
+        .toc-list {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+            display: grid;
+            gap: 6px;
+        }
+
+        .toc-link {
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .toc-link:hover {
+            text-decoration: underline;
+        }
+
+        .toc-indent {
+            margin-left: 12px;
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 
 <body>
-    <main class="content">
-        <div class="toolbar">
-            <a class="btn" href="dashboard.html">Back to dashboard</a>
-            <span id="file-label" class="muted"></span>
-        </div>
-        <div id="status" class="muted">Cargando reporte...</div>
-        <article id="report" class="report"></article>
-    </main>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="logo">AegIoT</div>
+            <nav class="nav">
+                <a data-nav="index" data-i18n="nav.overview" href="index.html">Overview</a>
+                <a data-nav="dashboard" data-i18n="nav.dashboard" href="dashboard.html">Dashboard</a>
+                <a data-nav="report-before" data-i18n="nav.report_before" href="report.html?file=reports/before.md">Report (Before)</a>
+                <a data-nav="report-after" data-i18n="nav.report_after" href="report.html?file=reports/after.md">Report (After)</a>
+                <a data-nav="report-diff" data-i18n="nav.report_diff" href="report.html?file=reports/diff.md">Report (Diff)</a>
+            </nav>
+            <div class="sidebar-footer muted" data-i18n="report.markdown_note">Markdown rendered in-browser.</div>
+        </aside>
 
+        <main class="content">
+            <div class="topbar">
+                <div>
+                    <h1 class="page-title" data-i18n="report.title">Report Viewer</h1>
+                    <div id="file-label" class="muted"></div>
+                </div>
+                <div class="actions">
+                    <a class="btn secondary" data-i18n="common.back_dashboard" href="dashboard.html">Back to dashboard</a>
+                    <button class="btn secondary" id="lang-toggle" type="button">ES</button>
+                </div>
+            </div>
+
+            <div id="status" class="muted" data-i18n="report.status_loading">Loading report...</div>
+
+            <section class="card" id="toc-card" style="margin-top: 16px; display:none;">
+                <h2 data-i18n="report.contents">Contents</h2>
+                <ul id="toc-list" class="toc-list"></ul>
+            </section>
+
+            <article id="report" class="report" style="margin-top: 16px;"></article>
+        </main>
+    </div>
+
+    <script src="i18n.js"></script>
+    <script src="nav.js"></script>
     <script>
         (function () {
             var params = new URLSearchParams(window.location.search);
@@ -92,17 +124,76 @@
             var statusEl = document.getElementById("status");
             var reportEl = document.getElementById("report");
             var fileLabel = document.getElementById("file-label");
+            var tocCard = document.getElementById("toc-card");
+            var tocList = document.getElementById("toc-list");
+
+            function t(key, fallback) {
+                if (window.i18n && window.i18n.t) return window.i18n.t(key);
+                return fallback || key;
+            }
 
             function isSafePath(path) {
                 if (!path) return false;
                 if (path.indexOf("://") !== -1) return false;
                 if (path.indexOf("..") !== -1) return false;
-                if (path[0] === "/" || path[0] === "\\") return false;
+                if (path.indexOf("\\") !== -1) return false;
+                if (path[0] === "/") return false;
+                if (path.indexOf("reports/") !== 0) return false;
+                if (path.slice(-3) !== ".md") return false;
                 return true;
             }
 
+            function slugify(text) {
+                return text.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+            }
+
+            function buildToc() {
+                tocList.innerHTML = "";
+                var headers = reportEl.querySelectorAll("h2, h3");
+                if (!headers.length) {
+                    tocCard.style.display = "none";
+                    return;
+                }
+                var used = {};
+                headers.forEach(function (h) {
+                    var base = slugify(h.textContent || "section");
+                    var id = base || "section";
+                    var idx = 2;
+                    while (used[id]) {
+                        id = base + "-" + idx;
+                        idx += 1;
+                    }
+                    used[id] = true;
+                    h.id = id;
+
+                    var li = document.createElement("li");
+                    if (h.tagName === "H3") {
+                        li.className = "toc-indent";
+                    }
+                    var a = document.createElement("a");
+                    a.className = "toc-link";
+                    a.href = "#" + id;
+                    a.textContent = h.textContent;
+                    li.appendChild(a);
+                    tocList.appendChild(li);
+                });
+                tocCard.style.display = "block";
+            }
+
+            function applyBadges() {
+                var levels = ["CRITICAL", "HIGH", "MEDIUM", "LOW"];
+                reportEl.querySelectorAll("td, p, li, strong").forEach(function (el) {
+                    var html = el.innerHTML;
+                    levels.forEach(function (level) {
+                        var regex = new RegExp("\\b" + level + "\\b", "g");
+                        html = html.replace(regex, "<span class='badge " + level.toLowerCase() + "'>" + level + "</span>");
+                    });
+                    el.innerHTML = html;
+                });
+            }
+
             if (!isSafePath(file)) {
-                statusEl.textContent = "Archivo no valido. Usa ?file=reports/before.md";
+                statusEl.textContent = t("report.invalid_file", "Invalid file. Use ?file=reports/before.md");
                 return;
             }
 
@@ -119,9 +210,11 @@
                     } else {
                         reportEl.textContent = text;
                     }
+                    applyBadges();
+                    buildToc();
                 })
                 .catch(function () {
-                    statusEl.textContent = "No se pudo cargar el reporte. Verifica el archivo en docs/reports.";
+                    statusEl.textContent = t("report.load_error", "Could not load report. Verify file in docs/reports.");
                 });
         })();
     </script>
