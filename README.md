@@ -2,17 +2,31 @@
 
 AegIoT reads a simple inventory CSV and generates a defensive risk report (0-100) per device.
 
+## Demo publica (GitHub Pages)
+URL esperada:
+https://<owner>.github.io/<repo>/
+
 ## Quickstart (Windows)
 ```powershell
 cd C:\aegiot
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
 python -m aegiot --input sample_devices.csv --output report.md
 ```
 
 ## Run the CLI
 ```powershell
 python -m aegiot --input sample_devices.csv --output report.md
+```
+
+## Generate demo reports locally
+```powershell
+python -m aegiot --input sample_devices.csv --output docs\reports\before.md
+python scripts\make_hardened_csv.py
+python -m aegiot --input docs\reports\hardened_devices.csv --output docs\reports\after.md
+python scripts\build_diff_md.py
+python scripts\build_summary_json.py
 ```
 
 ## Package info

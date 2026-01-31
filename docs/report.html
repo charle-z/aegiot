@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AegIoT Report Viewer</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .content {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .report {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            color: #111;
+        }
+
+        .report h1,
+        .report h2,
+        .report h3,
+        .report h4,
+        .report h5,
+        .report h6 {
+            color: #111;
+        }
+
+        .report a {
+            color: #0b5fff;
+        }
+
+        .report code {
+            color: #111;
+        }
+
+        .report pre {
+            overflow-x: auto;
+            background: #f6f6f6;
+            padding: 10px;
+            border-radius: 8px;
+            color: #111;
+        }
+
+        .report table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            color: #111;
+        }
+
+        .report th,
+        .report td {
+            border: 1px solid #e6e6e6;
+            padding: 6px 8px;
+            text-align: left;
+        }
+
+        .muted {
+            color: #666;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+
+<body>
+    <main class="content">
+        <div class="toolbar">
+            <a class="btn" href="dashboard.html">Back to dashboard</a>
+            <span id="file-label" class="muted"></span>
+        </div>
+        <div id="status" class="muted">Cargando reporte...</div>
+        <article id="report" class="report"></article>
+    </main>
+
+    <script>
+        (function () {
+            var params = new URLSearchParams(window.location.search);
+            var file = params.get("file") || "";
+            var statusEl = document.getElementById("status");
+            var reportEl = document.getElementById("report");
+            var fileLabel = document.getElementById("file-label");
+
+            function isSafePath(path) {
+                if (!path) return false;
+                if (path.indexOf("://") !== -1) return false;
+                if (path.indexOf("..") !== -1) return false;
+                if (path[0] === "/" || path[0] === "\\") return false;
+                return true;
+            }
+
+            if (!isSafePath(file)) {
+                statusEl.textContent = "Archivo no valido. Usa ?file=reports/before.md";
+                return;
+            }
+
+            fileLabel.textContent = file;
+            fetch(file, { cache: "no-store" })
+                .then(function (res) {
+                    if (!res.ok) throw new Error("not found");
+                    return res.text();
+                })
+                .then(function (text) {
+                    statusEl.textContent = "";
+                    if (window.marked) {
+                        reportEl.innerHTML = window.marked.parse(text);
+                    } else {
+                        reportEl.textContent = text;
+                    }
+                })
+                .catch(function () {
+                    statusEl.textContent = "No se pudo cargar el reporte. Verifica el archivo en docs/reports.";
+                });
+        })();
+    </script>
+</body>
+
+</html>

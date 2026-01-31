@@ -162,18 +162,18 @@
                     if (afterScore === undefined || afterScore === null) {
                         afterScore = beforeScore;
                     }
-                    var delta = data.delta;
-                    if (delta === undefined || delta === null) {
+                    var riskReduction = data.risk_reduction;
+                    if (riskReduction === undefined || riskReduction === null) {
                         if (typeof beforeScore === "number" && typeof afterScore === "number") {
-                            delta = Math.round((afterScore - beforeScore) * 100) / 100;
+                            riskReduction = Math.round((beforeScore - afterScore) * 100) / 100;
                         } else {
-                            delta = "n/a";
+                            riskReduction = "n/a";
                         }
                     }
 
-                    addCard("Before score", beforeScore);
-                    addCard("After score", afterScore);
-                    addCard("Delta", delta);
+                    addCard("Risk score (Before)", beforeScore);
+                    addCard("Risk score (After)", afterScore);
+                    addCard("Risk reduction", riskReduction);
 
                     var countsBefore = data.counts_before || data.counts || {};
                     var countsAfter = data.counts_after || {};

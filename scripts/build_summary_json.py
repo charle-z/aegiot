@@ -48,6 +48,7 @@ def main() -> int:
     before_overall = _overall(before_devices)
     after_overall = _overall(after_devices)
     delta = round(after_overall - before_overall, 2)
+    risk_reduction = round(before_overall - after_overall, 2)
 
     counts_before = _counts(before_devices)
     counts_after = _counts(after_devices)
@@ -70,6 +71,7 @@ def main() -> int:
         "before_overall_score": before_overall,
         "after_overall_score": after_overall,
         "delta": delta,
+        "risk_reduction": risk_reduction,
         "counts_before": counts_before,
         "counts_after": counts_after,
         "top5": top_items,

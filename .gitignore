@@ -10,9 +10,9 @@ build/
 .env
 report*.md
 report*.html
+!docs/report.html
 *.log
 .DS_Store
 # local generated reports
 report_check.md
 report_demo*.md
-
