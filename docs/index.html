@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AegIoT - IoT Firmware Risk Mapper</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
@@ -14,9 +14,16 @@
             <h1>AegIoT</h1>
             <p class="muted">IoT Firmware Risk Mapper (CLI). Defensive and local-first.</p>
             <div class="row">
-                <a class="btn" href="REPO_URL">Repo</a>
-                <a class="btn" href="REPO_URL/blob/main/report_example.md">Example report</a>
-                <a class="btn" href="REPO_URL/blob/main/sample_devices.csv">Sample CSV</a>
+                <a class="btn" id="repo-link" href="#">Repo</a>
+                <a class="btn" id="example-link" href="#">Example report</a>
+                <a class="btn" id="sample-link" href="#">Sample CSV</a>
+            </div>
+            <p id="repo-warning" class="muted" style="display:none;">No se pudo detectar el repo de GitHub para este sitio.</p>
+            <div class="row">
+                <a class="btn" href="dashboard.html">Dashboard</a>
+                <a class="btn" href="report.html?file=reports/before.md">Report (before)</a>
+                <a class="btn" href="report.html?file=reports/after.md">Report (after)</a>
+                <a class="btn" href="report.html?file=reports/diff.md">Report (diff)</a>
             </div>
         </header>
 
@@ -52,11 +59,34 @@ python -m aegiot --input sample_devices.csv --output report.md</code></pre>
 
 
     <script>
-        // Replace placeholder REPO_URL automatically if user forgets
         (function () {
-            var repo = 'REPO_URL';
-            if (repo.indexOf('REPO_URL') !== -1) {
-                // no-op
+            var host = window.location.hostname || "";
+            var path = window.location.pathname || "/";
+            var owner = "";
+            if (host.slice(-10) === ".github.io") {
+                owner = host.slice(0, -10);
+            }
+            var segments = path.split("/").filter(Boolean);
+            var repo = segments.length > 0 ? segments[0] : "";
+            var repoUrl = owner && repo ? "https://github.com/" + owner + "/" + repo : "";
+
+            var repoLink = document.getElementById("repo-link");
+            var exampleLink = document.getElementById("example-link");
+            var sampleLink = document.getElementById("sample-link");
+            var warning = document.getElementById("repo-warning");
+
+            if (repoUrl) {
+                repoLink.href = repoUrl;
+                exampleLink.href = repoUrl + "/blob/main/report_example.md";
+                sampleLink.href = repoUrl + "/blob/main/sample_devices.csv";
+            } else {
+                repoLink.href = "#";
+                exampleLink.href = "#";
+                sampleLink.href = "#";
+                repoLink.setAttribute("aria-disabled", "true");
+                exampleLink.setAttribute("aria-disabled", "true");
+                sampleLink.setAttribute("aria-disabled", "true");
+                warning.style.display = "block";
             }
         })();
     </script>

@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AegIoT RiskOps Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .stack {
+            display: grid;
+            gap: 16px;
+        }
+
+        .summary-grid {
+            display: grid;
+            gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .list {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: #f1f1f1;
+            font-size: 12px;
+        }
+
+        .links a {
+            margin-right: 10px;
+        }
+
+        .counts-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .counts-table th,
+        .counts-table td {
+            border: 1px solid #e6e6e6;
+            padding: 6px 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="wrap">
+        <header class="card">
+            <h1>AegIoT RiskOps Dashboard</h1>
+            <p class="muted">Resumen local de reportes en docs/reports.</p>
+            <div class="row">
+                <a class="btn" href="index.html">Home</a>
+                <a class="btn" href="report.html?file=reports/before.md">Report (before)</a>
+                <a class="btn" href="report.html?file=reports/after.md">Report (after)</a>
+                <a class="btn" href="report.html?file=reports/diff.md">Report (diff)</a>
+            </div>
+        </header>
+
+        <section class="card stack">
+            <div id="status" class="muted">Cargando summary.json...</div>
+            <div id="summary" class="summary-grid"></div>
+            <div>
+                <h2>Severity counts</h2>
+                <table id="counts-table" class="counts-table">
+                    <thead>
+                        <tr>
+                            <th>Scope</th>
+                            <th>LOW</th>
+                            <th>MEDIUM</th>
+                            <th>HIGH</th>
+                            <th>CRITICAL</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div>
+                <h2>Top 5 findings</h2>
+                <ul id="top5" class="list"></ul>
+            </div>
+            <div>
+                <h2>Report links</h2>
+                <div id="report-links" class="links"></div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        (function () {
+            var statusEl = document.getElementById("status");
+            var summaryEl = document.getElementById("summary");
+            var top5El = document.getElementById("top5");
+            var linksEl = document.getElementById("report-links");
+            var countsBody = document.getElementById("counts-table").querySelector("tbody");
+            var summaryUrl = "reports/summary.json";
+
+            function safeText(value) {
+                return value === undefined || value === null ? "" : String(value);
+            }
+
+            function addCard(label, value) {
+                var div = document.createElement("div");
+                div.className = "card";
+                div.innerHTML = "<div class='muted'>" + safeText(label) + "</div><div><strong>" + safeText(value) + "</strong></div>";
+                summaryEl.appendChild(div);
+            }
+
+            function pickPath(summary, key) {
+                if (summary && typeof summary[key] === "string") return summary[key];
+                if (summary && summary.reports && typeof summary.reports[key] === "string") return summary.reports[key];
+                if (summary && summary.report_files && typeof summary.report_files[key] === "string") return summary.report_files[key];
+                if (summary && summary.files && typeof summary.files[key] === "string") return summary.files[key];
+                return "";
+            }
+
+            function addLink(label, path) {
+                var span = document.createElement("span");
+                if (path) {
+                    var a = document.createElement("a");
+                    a.href = "report.html?file=" + encodeURIComponent(path);
+                    a.textContent = label;
+                    a.className = "btn";
+                    span.appendChild(a);
+                } else {
+                    span.innerHTML = "<span class='pill'>" + label + " no disponible</span>";
+                }
+                linksEl.appendChild(span);
+            }
+
+            function renderCountsRow(label, counts) {
+                var tr = document.createElement("tr");
+                var tdLabel = document.createElement("td");
+                tdLabel.textContent = label;
+                tr.appendChild(tdLabel);
+                ["LOW", "MEDIUM", "HIGH", "CRITICAL"].forEach(function (level) {
+                    var td = document.createElement("td");
+                    td.textContent = safeText(counts[level] || 0);
+                    tr.appendChild(td);
+                });
+                countsBody.appendChild(tr);
+            }
+
+            fetch(summaryUrl, { cache: "no-store" })
+                .then(function (res) {
+                    if (!res.ok) throw new Error("No summary.json");
+                    return res.json();
+                })
+                .then(function (data) {
+                    statusEl.textContent = "OK: summary.json cargado.";
+
+                    var beforeScore = data.before_overall_score;
+                    if (beforeScore === undefined || beforeScore === null) {
+                        beforeScore = data.overall_score || data.overallScore || data.score || "n/a";
+                    }
+                    var afterScore = data.after_overall_score;
+                    if (afterScore === undefined || afterScore === null) {
+                        afterScore = beforeScore;
+                    }
+                    var delta = data.delta;
+                    if (delta === undefined || delta === null) {
+                        if (typeof beforeScore === "number" && typeof afterScore === "number") {
+                            delta = Math.round((afterScore - beforeScore) * 100) / 100;
+                        } else {
+                            delta = "n/a";
+                        }
+                    }
+
+                    addCard("Before score", beforeScore);
+                    addCard("After score", afterScore);
+                    addCard("Delta", delta);
+
+                    var countsBefore = data.counts_before || data.counts || {};
+                    var countsAfter = data.counts_after || {};
+                    renderCountsRow("Before", countsBefore);
+                    renderCountsRow("After", countsAfter);
+
+                    var top = data.top5 || data.top || data.findings || [];
+                    if (!Array.isArray(top) || top.length === 0) {
+                        var li = document.createElement("li");
+                        li.textContent = "No hay hallazgos.";
+                        top5El.appendChild(li);
+                    } else {
+                        top.slice(0, 5).forEach(function (item) {
+                            var li = document.createElement("li");
+                            if (typeof item === "string") {
+                                li.textContent = item;
+                            } else {
+                                var line = [
+                                    safeText(item.device_id || item.id || item.name || "device"),
+                                    safeText(item.vendor || ""),
+                                    safeText(item.model || "")
+                                ].join(" ").trim();
+                                var score = safeText(item.score || item.risk_score || "");
+                                var level = safeText(item.level || item.risk_level || "");
+                                li.textContent = line + (score ? " - " + score : "") + (level ? " (" + level + ")" : "");
+                            }
+                            top5El.appendChild(li);
+                        });
+                    }
+
+                    addLink("before.md", pickPath(data, "before") || "reports/before.md");
+                    addLink("after.md", pickPath(data, "after") || "reports/after.md");
+                    addLink("diff.md", pickPath(data, "diff") || "reports/diff.md");
+                })
+                .catch(function () {
+                    statusEl.textContent = "No se encontro reports/summary.json. Genera reportes en docs/reports.";
+                    addLink("before.md", "reports/before.md");
+                    addLink("after.md", "reports/after.md");
+                    addLink("diff.md", "reports/diff.md");
+                });
+        })();
+    </script>
+</body>
+
+</html>

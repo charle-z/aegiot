@@ -1,0 +1,66 @@
+{
+  "after_overall_score": 47.5,
+  "before_overall_score": 64.17,
+  "counts": {
+    "CRITICAL": 4,
+    "HIGH": 4,
+    "LOW": 2,
+    "MEDIUM": 2
+  },
+  "counts_after": {
+    "CRITICAL": 0,
+    "HIGH": 4,
+    "LOW": 2,
+    "MEDIUM": 6
+  },
+  "counts_before": {
+    "CRITICAL": 4,
+    "HIGH": 4,
+    "LOW": 2,
+    "MEDIUM": 2
+  },
+  "delta": -16.67,
+  "overall_score": 64.17,
+  "reports": {
+    "after": "reports/after.md",
+    "before": "reports/before.md",
+    "diff": "reports/diff.md"
+  },
+  "top5": [
+    {
+      "device_id": "cam-001",
+      "model": "DS-2CD2043G0-I",
+      "risk_level": "CRITICAL",
+      "score": 85,
+      "vendor": "Hikvision"
+    },
+    {
+      "device_id": "cam-002",
+      "model": "IPC-HFW1230S",
+      "risk_level": "CRITICAL",
+      "score": 85,
+      "vendor": "Dahua"
+    },
+    {
+      "device_id": "dvr-002",
+      "model": "NVR4108",
+      "risk_level": "CRITICAL",
+      "score": 85,
+      "vendor": "Dahua"
+    },
+    {
+      "device_id": "dvr-001",
+      "model": "DS-7608NI",
+      "risk_level": "CRITICAL",
+      "score": 80,
+      "vendor": "Hikvision"
+    },
+    {
+      "device_id": "iot-002",
+      "model": "RLC-520A",
+      "risk_level": "HIGH",
+      "score": 75,
+      "vendor": "Reolink"
+    }
+  ]
+}
