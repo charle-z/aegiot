@@ -1,0 +1,254 @@
+[
+  {
+    "device_id": "cam-001",
+    "device_type": "camera",
+    "exposed_to_internet": false,
+    "firmware_version": "5.5.82_2021",
+    "model": "DS-2CD2043G0-I",
+    "reasons": [
+      "Vendor base risk: HIGH (+30)",
+      "Exposed to internet: NO (+0)",
+      "Device type 'camera' common attack surface (+10)",
+      "Firmware appears old (2021) (+20)"
+    ],
+    "recommendations": [
+      "Remove direct internet exposure (VPN/allowlist) or place behind firewall.",
+      "Update firmware to latest stable and document versions.",
+      "Enforce strong auth: unique credentials, MFA where possible."
+    ],
+    "risk_level": "HIGH",
+    "score": 60,
+    "vendor": "Hikvision"
+  },
+  {
+    "device_id": "cam-002",
+    "device_type": "camera",
+    "exposed_to_internet": false,
+    "firmware_version": "2.622.0000000.7.R_2020",
+    "model": "IPC-HFW1230S",
+    "reasons": [
+      "Vendor base risk: HIGH (+30)",
+      "Exposed to internet: NO (+0)",
+      "Device type 'camera' common attack surface (+10)",
+      "Firmware appears old (2020) (+20)"
+    ],
+    "recommendations": [
+      "Remove direct internet exposure (VPN/allowlist) or place behind firewall.",
+      "Update firmware to latest stable and document versions.",
+      "Enforce strong auth: unique credentials, MFA where possible."
+    ],
+    "risk_level": "HIGH",
+    "score": 60,
+    "vendor": "Dahua"
+  },
+  {
+    "device_id": "dvr-002",
+    "device_type": "camera",
+    "exposed_to_internet": false,
+    "firmware_version": "3.210_2018",
+    "model": "NVR4108",
+    "reasons": [
+      "Vendor base risk: HIGH (+30)",
+      "Exposed to internet: NO (+0)",
+      "Device type 'camera' common attack surface (+10)",
+      "Firmware appears old (2018) (+20)"
+    ],
+    "recommendations": [
+      "Remove direct internet exposure (VPN/allowlist) or place behind firewall.",
+      "Update firmware to latest stable and document versions.",
+      "Enforce strong auth: unique credentials, MFA where possible."
+    ],
+    "risk_level": "HIGH",
+    "score": 60,
+    "vendor": "Dahua"
+  },
+  {
+    "device_id": "dvr-001",
+    "device_type": "camera",
+    "exposed_to_internet": false,
+    "firmware_version": "UNKNOWN",
+    "model": "DS-7608NI",
+    "reasons": [
+      "Vendor base risk: HIGH (+30)",
+      "Exposed to internet: NO (+0)",
+      "Device type 'camera' common attack surface (+10)",
+      "Firmware version: UNKNOWN (+15)"
+    ],
+    "recommendations": [
+      "Remove direct internet exposure (VPN/allowlist) or place behind firewall.",
+      "Update firmware to latest stable and document versions.",
+      "Enforce strong auth: unique credentials, MFA where possible."
+    ],
+    "risk_level": "HIGH",
+    "score": 55,
+    "vendor": "Hikvision"
+  },
+  {
+    "device_id": "iot-001",
+    "device_type": "camera",
+    "exposed_to_internet": false,
+    "firmware_version": "1.3.6_2022",
+    "model": "Mi Camera 2K",
+    "reasons": [
+      "Vendor base risk: MEDIUM (+20)",
+      "Exposed to internet: NO (+0)",
+      "Device type 'camera' common attack surface (+10)",
+      "Firmware appears old (2022) (+20)"
+    ],
+    "recommendations": [
+      "Schedule firmware updates and enable auto-update if supported.",
+      "Rotate credentials and disable default accounts.",
+      "Restrict management interfaces to internal networks only."
+    ],
+    "risk_level": "MEDIUM",
+    "score": 50,
+    "vendor": "Xiaomi"
+  },
+  {
+    "device_id": "iot-002",
+    "device_type": "camera",
+    "exposed_to_internet": false,
+    "firmware_version": "v3.0.0_2021",
+    "model": "RLC-520A",
+    "reasons": [
+      "Vendor base risk: MEDIUM (+20)",
+      "Exposed to internet: NO (+0)",
+      "Device type 'camera' common attack surface (+10)",
+      "Firmware appears old (2021) (+20)"
+    ],
+    "recommendations": [
+      "Schedule firmware updates and enable auto-update if supported.",
+      "Rotate credentials and disable default accounts.",
+      "Restrict management interfaces to internal networks only."
+    ],
+    "risk_level": "MEDIUM",
+    "score": 50,
+    "vendor": "Reolink"
+  },
+  {
+    "device_id": "nas-001",
+    "device_type": "router",
+    "exposed_to_internet": false,
+    "firmware_version": "4.5.4_2021",
+    "model": "TS-231P",
+    "reasons": [
+      "Vendor base risk: MEDIUM (+20)",
+      "Exposed to internet: NO (+0)",
+      "Device type 'router' common attack surface (+10)",
+      "Firmware appears old (2021) (+20)"
+    ],
+    "recommendations": [
+      "Schedule firmware updates and enable auto-update if supported.",
+      "Rotate credentials and disable default accounts.",
+      "Restrict management interfaces to internal networks only."
+    ],
+    "risk_level": "MEDIUM",
+    "score": 50,
+    "vendor": "QNAP"
+  },
+  {
+    "device_id": "oth-001",
+    "device_type": "other",
+    "exposed_to_internet": false,
+    "firmware_version": "UNKNOWN",
+    "model": "SmartPlug X1",
+    "reasons": [
+      "Vendor base risk: HIGH (+30)",
+      "Exposed to internet: NO (+0)",
+      "Device type 'other' (+5)",
+      "Firmware version: UNKNOWN (+15)"
+    ],
+    "recommendations": [
+      "Schedule firmware updates and enable auto-update if supported.",
+      "Rotate credentials and disable default accounts.",
+      "Restrict management interfaces to internal networks only."
+    ],
+    "risk_level": "MEDIUM",
+    "score": 50,
+    "vendor": "Generic"
+  },
+  {
+    "device_id": "rtr-001",
+    "device_type": "router",
+    "exposed_to_internet": false,
+    "firmware_version": "v2_2019",
+    "model": "Archer C7",
+    "reasons": [
+      "Vendor base risk: MEDIUM (+20)",
+      "Exposed to internet: NO (+0)",
+      "Device type 'router' common attack surface (+10)",
+      "Firmware appears old (2019) (+20)"
+    ],
+    "recommendations": [
+      "Schedule firmware updates and enable auto-update if supported.",
+      "Rotate credentials and disable default accounts.",
+      "Restrict management interfaces to internal networks only."
+    ],
+    "risk_level": "MEDIUM",
+    "score": 50,
+    "vendor": "TP-Link"
+  },
+  {
+    "device_id": "rtr-002",
+    "device_type": "router",
+    "exposed_to_internet": false,
+    "firmware_version": "2.0.9-hotfix.6_2022",
+    "model": "EdgeRouter X",
+    "reasons": [
+      "Vendor base risk: LOW (+10)",
+      "Exposed to internet: NO (+0)",
+      "Device type 'router' common attack surface (+10)",
+      "Firmware appears old (2022) (+20)"
+    ],
+    "recommendations": [
+      "Schedule firmware updates and enable auto-update if supported.",
+      "Rotate credentials and disable default accounts.",
+      "Restrict management interfaces to internal networks only."
+    ],
+    "risk_level": "MEDIUM",
+    "score": 40,
+    "vendor": "Ubiquiti"
+  },
+  {
+    "device_id": "nas-002",
+    "device_type": "nas",
+    "exposed_to_internet": false,
+    "firmware_version": "DSM 7.2_2023",
+    "model": "DS220+",
+    "reasons": [
+      "Vendor base risk: LOW (+10)",
+      "Exposed to internet: NO (+0)",
+      "Device type 'nas' higher impact (+15)",
+      "Firmware appears recent (2023) (+0)"
+    ],
+    "recommendations": [
+      "Keep inventory and a patch cadence (monthly/quarterly).",
+      "Keep behind NAT/firewall; avoid direct exposure.",
+      "Document baseline config and monitor changes."
+    ],
+    "risk_level": "LOW",
+    "score": 25,
+    "vendor": "Synology"
+  },
+  {
+    "device_id": "ap-001",
+    "device_type": "router",
+    "exposed_to_internet": false,
+    "firmware_version": "7.12_2024",
+    "model": "hAP ac2",
+    "reasons": [
+      "Vendor base risk: LOW (+10)",
+      "Exposed to internet: NO (+0)",
+      "Device type 'router' common attack surface (+10)",
+      "Firmware appears recent (2024) (+0)"
+    ],
+    "recommendations": [
+      "Keep inventory and a patch cadence (monthly/quarterly).",
+      "Keep behind NAT/firewall; avoid direct exposure.",
+      "Document baseline config and monitor changes."
+    ],
+    "risk_level": "LOW",
+    "score": 20,
+    "vendor": "MikroTik"
+  }
+]

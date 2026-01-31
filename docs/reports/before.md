@@ -1,5 +1,5 @@
 # AegIoT - IoT Firmware Risk Mapper
-- Generated: **2026-01-31 10:22:03**
+- Generated: **2026-01-31 13:40:42**
 
 ## Executive summary
 - LOW: 2 | MEDIUM: 2 | HIGH: 4 | CRITICAL: 4
