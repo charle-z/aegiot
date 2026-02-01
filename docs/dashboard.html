@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 
@@ -37,12 +38,68 @@
                 </div>
             </div>
 
-            <section class="grid-3" id="summary"></section>
+            <section class="grid-2" id="top-devices" style="margin-top: 18px;">
+                <div class="card">
+                    <h2 data-i18n="dashboard.top_devices">Top risky devices</h2>
+                    <div class="filters">
+                        <label class="filter-group"><span data-i18n="dashboard.filters_vendor">Vendor</span>
+                            <select id="filter-vendor" class="filter-control"></select>
+                        </label>
+                        <label class="filter-group"><span data-i18n="dashboard.filters_type">Type</span>
+                            <select id="filter-type" class="filter-control"></select>
+                        </label>
+                        <label class="filter-group"><span data-i18n="dashboard.filters_exposed">Exposed</span>
+                            <select id="filter-exposed" class="filter-control"></select>
+                        </label>
+                        <label class="filter-group"><span data-i18n="dashboard.filters_risk">Risk</span>
+                            <select id="filter-risk" class="filter-control"></select>
+                        </label>
+                        <label class="filter-group"><span data-i18n="dashboard.filters_search">Search device_id</span>
+                            <input id="filter-search" class="filter-control" data-i18n-placeholder="dashboard.filters_search" placeholder="Search device_id" />
+                        </label>
+                    </div>
+                    <div class="table-wrap"><table class="table" id="devices-table">
+                        <thead>
+                            <tr>
+                                <th data-i18n="dashboard.table_device">Device</th>
+                                <th data-i18n="dashboard.table_vendor">Vendor</th>
+                                <th data-i18n="dashboard.table_model">Model</th>
+                                <th data-i18n="dashboard.table_type">Type</th>
+                                <th data-i18n="dashboard.table_exposed">Exposed</th>
+                                <th data-i18n="dashboard.table_score">Score</th>
+                                <th data-i18n="dashboard.table_risk">Risk</th>
+                                <th data-i18n="dashboard.table_notes">Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table></div>
+                </div>
+                <div class="card">
+                    <h2 data-i18n="dashboard.top_exposed">Top risky exposed devices</h2>
+                    <div class="table-wrap"><table class="table" id="exposed-table">
+                        <thead>
+                            <tr>
+                                <th data-i18n="dashboard.table_device">Device</th>
+                                <th data-i18n="dashboard.table_vendor">Vendor</th>
+                                <th data-i18n="dashboard.table_model">Model</th>
+                                <th data-i18n="dashboard.table_type">Type</th>
+                                <th data-i18n="dashboard.table_exposed">Exposed</th>
+                                <th data-i18n="dashboard.table_score">Score</th>
+                                <th data-i18n="dashboard.table_risk">Risk</th>
+                                <th data-i18n="dashboard.table_notes">Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table></div>
+                </div>
+            </section>
+
+            <section class="grid-3" id="summary" style="margin-top: 18px;"></section>
 
             <section class="grid-2" style="margin-top: 18px;">
                 <div class="card">
                     <h2 data-i18n="dashboard.severity_counts">Severity counts</h2>
-                    <table class="table" id="counts-table">
+                    <div class="table-wrap"><table class="table" id="counts-table">
                         <thead>
                             <tr>
                                 <th>Scope</th>
@@ -53,7 +110,7 @@
                             </tr>
                         </thead>
                         <tbody></tbody>
-                    </table>
+                    </table></div>
                 </div>
                 <div class="card">
                     <h2 data-i18n="dashboard.severity_chart">Severity chart</h2>
@@ -62,7 +119,7 @@
                 </div>
             </section>
 
-            <section class="grid-3" style="margin-top: 18px;">
+            <section class="grid-2" style="margin-top: 18px;">
                 <div class="card">
                     <h2 data-i18n="dashboard.exposure">Exposure</h2>
                     <canvas id="exposure-chart" height="200"></canvas>
@@ -71,46 +128,35 @@
                     <h2 data-i18n="dashboard.vendor_chart">Top vendors (avg score)</h2>
                     <canvas id="vendor-chart" height="200"></canvas>
                 </div>
-                <div class="card">
-                    <h2 data-i18n="dashboard.score_hist">Score histogram</h2>
-                    <canvas id="score-chart" height="200"></canvas>
-                </div>
             </section>
 
-            <section class="card" style="margin-top: 18px;">
-                <h2 data-i18n="dashboard.top_devices">Top devices</h2>
-                <div class="filters">
-                    <label class="filter-group"><span data-i18n="dashboard.filters_vendor">Vendor</span>
-                        <select id="filter-vendor" class="filter-control"></select>
-                    </label>
-                    <label class="filter-group"><span data-i18n="dashboard.filters_type">Type</span>
-                        <select id="filter-type" class="filter-control"></select>
-                    </label>
-                    <label class="filter-group"><span data-i18n="dashboard.filters_exposed">Exposed</span>
-                        <select id="filter-exposed" class="filter-control"></select>
-                    </label>
-                    <label class="filter-group"><span data-i18n="dashboard.filters_risk">Risk</span>
-                        <select id="filter-risk" class="filter-control"></select>
-                    </label>
-                    <label class="filter-group"><span data-i18n="dashboard.filters_search">Search device_id</span>
-                        <input id="filter-search" class="filter-control" data-i18n-placeholder="dashboard.filters_search" placeholder="Search device_id" />
-                    </label>
+            <section class="grid-2" style="margin-top: 18px;">
+                <div class="card">
+                    <h2 data-i18n="dashboard.risk_by_vendor">Risk by vendor</h2>
+                    <div class="table-wrap"><table class="table" id="vendor-table">
+                        <thead>
+                            <tr>
+                                <th data-i18n="dashboard.table_vendor">Vendor</th>
+                                <th data-i18n="dashboard.table_avg">Avg score</th>
+                                <th data-i18n="dashboard.table_count">Count</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table></div>
                 </div>
-                <table class="table" id="devices-table">
-                    <thead>
-                        <tr>
-                            <th data-i18n="dashboard.table_device">Device</th>
-                            <th data-i18n="dashboard.table_vendor">Vendor</th>
-                            <th data-i18n="dashboard.table_model">Model</th>
-                            <th data-i18n="dashboard.table_type">Type</th>
-                            <th data-i18n="dashboard.table_exposed">Exposed</th>
-                            <th data-i18n="dashboard.table_score">Score</th>
-                            <th data-i18n="dashboard.table_risk">Risk</th>
-                            <th data-i18n="dashboard.table_notes">Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <div class="card">
+                    <h2 data-i18n="dashboard.risk_by_type">Risk by type</h2>
+                    <div class="table-wrap"><table class="table" id="type-table">
+                        <thead>
+                            <tr>
+                                <th data-i18n="dashboard.table_type">Type</th>
+                                <th data-i18n="dashboard.table_avg">Avg score</th>
+                                <th data-i18n="dashboard.table_count">Count</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table></div>
+                </div>
             </section>
 
             <section class="grid-2" style="margin-top: 18px;">
@@ -120,7 +166,7 @@
                 </div>
                 <div class="card">
                     <h2 data-i18n="dashboard.run_metadata">Run metadata</h2>
-                    <table class="table" id="meta-table">
+                    <div class="table-wrap"><table class="table" id="meta-table">
                         <tbody>
                             <tr>
                                 <td>generated_at</td>
@@ -139,13 +185,22 @@
                                 <td id="meta-fingerprint">-</td>
                             </tr>
                         </tbody>
-                    </table>
+                    </table></div>
                 </div>
             </section>
 
-            <section class="card" style="margin-top: 18px;">
-                <h2 data-i18n="dashboard.report_links">Report links</h2>
-                <div id="report-links" class="actions"></div>
+            <section class="grid-2" style="margin-top: 18px;">
+                <div class="card">
+                    <h2 data-i18n="dashboard.report_links">Report links</h2>
+                    <div id="report-links" class="actions"></div>
+                </div>
+                <div class="card">
+                    <h2 data-i18n="dashboard.export_title">Export</h2>
+                    <div class="actions">
+                        <a class="btn secondary" id="download-summary" data-i18n="dashboard.download_summary" href="reports/summary.json" download>Download summary.json</a>
+                        <a class="btn secondary" id="download-devices" data-i18n="dashboard.download_devices" href="reports/devices_before.json" download>Download devices_before.json</a>
+                    </div>
+                </div>
             </section>
         </main>
     </div>
@@ -160,6 +215,11 @@
             var linksEl = document.getElementById("report-links");
             var countsBody = document.getElementById("counts-table").querySelector("tbody");
             var devicesBody = document.getElementById("devices-table").querySelector("tbody");
+            var exposedBody = document.getElementById("exposed-table").querySelector("tbody");
+            var vendorBody = document.getElementById("vendor-table").querySelector("tbody");
+            var typeBody = document.getElementById("type-table").querySelector("tbody");
+            var downloadSummary = document.getElementById("download-summary");
+            var downloadDevices = document.getElementById("download-devices");
             var vendorFilter = document.getElementById("filter-vendor");
             var typeFilter = document.getElementById("filter-type");
             var exposedFilter = document.getElementById("filter-exposed");
@@ -167,6 +227,10 @@
             var searchFilter = document.getElementById("filter-search");
             var summaryUrl = "reports/summary.json";
             var devicesUrl = "reports/devices_before.json";
+
+            var accent = "#3b7c86";
+            var accentSoft = "rgba(59, 124, 134, 0.7)";
+            var accentAlt = "rgba(148, 163, 184, 0.6)";
 
             var allDevices = [];
 
@@ -222,21 +286,21 @@
                 return span;
             }
 
-            function renderDevices(devices) {
-                devicesBody.innerHTML = "";
+            function renderDeviceTable(body, devices, limit) {
+                body.innerHTML = "";
                 if (!devices.length) {
                     var emptyRow = document.createElement("tr");
                     var emptyCell = document.createElement("td");
                     emptyCell.colSpan = 8;
                     emptyCell.textContent = t("dashboard.no_results", "No results for these filters.");
                     emptyRow.appendChild(emptyCell);
-                    devicesBody.appendChild(emptyRow);
+                    body.appendChild(emptyRow);
                     return;
                 }
-                devices.slice(0, 15).forEach(function (d) {
+                devices.slice(0, limit || 10).forEach(function (d) {
                     var tr = document.createElement("tr");
                     var tdId = document.createElement("td");
-                    tdId.textContent = d.device_id;
+                    tdId.innerHTML = "<span class='mono'>" + safeText(d.device_id) + "</span>";
                     tr.appendChild(tdId);
 
                     var tdVendor = document.createElement("td");
@@ -267,7 +331,48 @@
                     tdNotes.textContent = (d.reasons || []).slice(0, 2).join("; ");
                     tr.appendChild(tdNotes);
 
-                    devicesBody.appendChild(tr);
+                    body.appendChild(tr);
+                });
+            }
+
+            function renderGroupTable(body, groups) {
+                body.innerHTML = "";
+                var items = Object.keys(groups || {}).map(function (key) {
+                    var item = groups[key] || {};
+                    return {
+                        label: key,
+                        avg: item.avg_score || 0,
+                        total: item.total || 0
+                    };
+                });
+                items.sort(function (a, b) {
+                    if (b.avg !== a.avg) return b.avg - a.avg;
+                    return a.label.localeCompare(b.label);
+                });
+                if (!items.length) {
+                    var emptyRow = document.createElement("tr");
+                    var emptyCell = document.createElement("td");
+                    emptyCell.colSpan = 3;
+                    emptyCell.textContent = t("dashboard.no_results", "No results for these filters.");
+                    emptyRow.appendChild(emptyCell);
+                    body.appendChild(emptyRow);
+                    return;
+                }
+                items.forEach(function (item) {
+                    var tr = document.createElement("tr");
+                    var tdLabel = document.createElement("td");
+                    tdLabel.textContent = item.label;
+                    tr.appendChild(tdLabel);
+
+                    var tdAvg = document.createElement("td");
+                    tdAvg.textContent = item.avg.toFixed(2);
+                    tr.appendChild(tdAvg);
+
+                    var tdTotal = document.createElement("td");
+                    tdTotal.textContent = item.total;
+                    tr.appendChild(tdTotal);
+
+                    body.appendChild(tr);
                 });
             }
 
@@ -292,7 +397,10 @@
                     return a.device_id.localeCompare(b.device_id);
                 });
 
-                renderDevices(filtered);
+                renderDeviceTable(devicesBody, filtered, 10);
+
+                var exposedOnly = filtered.filter(function (d) { return d.exposed_to_internet; });
+                renderDeviceTable(exposedBody, exposedOnly, 10);
             }
 
             function fillSelect(select, values) {
@@ -349,7 +457,7 @@
                 var beforeData = labels.map(function (l) { return countsBefore[l] || 0; });
                 var afterData = labels.map(function (l) { return countsAfter[l] || 0; });
                 Chart.defaults.color = "#cbd5e1";
-                Chart.defaults.borderColor = "#233044";
+                Chart.defaults.borderColor = "#1f2a3a";
                 new Chart(canvas.getContext("2d"), {
                     type: "bar",
                     data: {
@@ -358,15 +466,15 @@
                             {
                                 label: t("dashboard.scope_before", "Before"),
                                 data: beforeData,
-                                backgroundColor: "rgba(59, 130, 246, 0.7)",
-                                borderColor: "rgba(59, 130, 246, 1)",
+                                backgroundColor: accentSoft,
+                                borderColor: accent,
                                 borderWidth: 1
                             },
                             {
                                 label: t("dashboard.scope_after", "After"),
                                 data: afterData,
-                                backgroundColor: "rgba(34, 197, 94, 0.7)",
-                                borderColor: "rgba(34, 197, 94, 1)",
+                                backgroundColor: accentAlt,
+                                borderColor: "#94a3b8",
                                 borderWidth: 1
                             }
                         ]
@@ -393,8 +501,8 @@
                         datasets: [
                             {
                                 data: [exposure.exposed_yes || 0, exposure.exposed_no || 0],
-                                backgroundColor: ["rgba(239, 68, 68, 0.7)", "rgba(34, 197, 94, 0.7)"],
-                                borderColor: ["rgba(239, 68, 68, 1)", "rgba(34, 197, 94, 1)"],
+                                backgroundColor: [accentSoft, accentAlt],
+                                borderColor: [accent, "#94a3b8"],
                                 borderWidth: 1
                             }
                         ]
@@ -407,10 +515,11 @@
                 var canvas = document.getElementById("vendor-chart");
                 if (!canvas || !window.Chart) return;
                 var items = Object.keys(byVendor || {}).map(function (k) {
-                    return { vendor: k, avg: byVendor[k].avg_score || 0 };
+                    return { vendor: k, avg: byVendor[k].avg_score || 0, total: byVendor[k].total || 0 };
                 });
                 items.sort(function (a, b) { return b.avg - a.avg; });
                 var top = items.slice(0, 6);
+                var counts = top.map(function (x) { return x.total; });
                 new Chart(canvas.getContext("2d"), {
                     type: "bar",
                     data: {
@@ -419,60 +528,29 @@
                             {
                                 label: "Avg score",
                                 data: top.map(function (x) { return x.avg; }),
-                                backgroundColor: "rgba(59, 130, 246, 0.7)",
-                                borderColor: "rgba(59, 130, 246, 1)",
+                                backgroundColor: accentSoft,
+                                borderColor: accent,
                                 borderWidth: 1
                             }
                         ]
                     },
                     options: {
                         responsive: true,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function (ctx) {
+                                        var count = counts[ctx.dataIndex] || 0;
+                                        return "Avg score: " + ctx.parsed.y + " | Count: " + count;
+                                    }
+                                }
+                            }
+                        },
                         scales: {
                             y: {
                                 beginAtZero: true,
                                 ticks: { precision: 0 }
                             }
-                        }
-                    }
-                });
-            }
-
-            function renderHistogram(devices) {
-                var canvas = document.getElementById("score-chart");
-                if (!canvas || !window.Chart) return;
-                var bins = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
-                var counts = new Array(bins.length - 1).fill(0);
-                devices.forEach(function (d) {
-                    var score = d.score || 0;
-                    for (var i = 0; i < bins.length - 1; i++) {
-                        if (score >= bins[i] && score < bins[i + 1]) {
-                            counts[i] += 1;
-                            break;
-                        }
-                        if (score === 100 && i === bins.length - 2) counts[i] += 1;
-                    }
-                });
-                var labels = counts.map(function (_, idx) {
-                    return bins[idx] + "-" + (bins[idx + 1] - 1);
-                });
-                new Chart(canvas.getContext("2d"), {
-                    type: "bar",
-                    data: {
-                        labels: labels,
-                        datasets: [
-                            {
-                                label: t("dashboard.hist_devices", "Devices"),
-                                data: counts,
-                                backgroundColor: "rgba(148, 163, 184, 0.7)",
-                                borderColor: "rgba(148, 163, 184, 1)",
-                                borderWidth: 1
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: { beginAtZero: true, ticks: { precision: 0 } }
                         }
                     }
                 });
@@ -526,7 +604,9 @@
 
                     renderExposure(data.exposure || { exposed_yes: 0, exposed_no: 0 });
                     renderVendorChart(data.by_vendor || {});
-                    renderHistogram(devices);
+
+                    renderGroupTable(vendorBody, data.by_vendor || {});
+                    renderGroupTable(typeBody, data.by_type || {});
 
                     allDevices = devices || [];
                     fillSelect(vendorFilter, Array.from(new Set(allDevices.map(function (d) { return d.vendor; }))).sort());
@@ -572,6 +652,13 @@
                     addLink("before.md", pickPath(data, "before") || "reports/before.md");
                     addLink("after.md", pickPath(data, "after") || "reports/after.md");
                     addLink("diff.md", pickPath(data, "diff") || "reports/diff.md");
+
+                    if (downloadSummary) {
+                        downloadSummary.href = "reports/summary.json";
+                    }
+                    if (downloadDevices) {
+                        downloadDevices.href = pickPath(data, "devices_before") || "reports/devices_before.json";
+                    }
                 })
                 .catch(function () {
                     statusEl.textContent = t("dashboard.status_missing", "summary.json not found. Generate reports in docs/reports.");
@@ -581,3 +668,4 @@
 </body>
 
 </html>
+

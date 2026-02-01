@@ -8,11 +8,33 @@
     <link rel="stylesheet" href="style.css" />
     <style>
         .report {
-            background: #ffffff;
+            background: #f8fafc;
             border-radius: 14px;
-            padding: 22px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            color: #111;
+            padding: 24px;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+            color: #0b1220;
+            line-height: 1.65;
+        }
+
+        .report.dark {
+            background: #0c1320;
+            color: #e2e8f0;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+        }
+
+        .report h1 {
+            margin: 0 0 12px;
+            font-size: 28px;
+        }
+
+        .report h2 {
+            margin: 24px 0 10px;
+            font-size: 20px;
+        }
+
+        .report h3 {
+            margin: 18px 0 8px;
+            font-size: 16px;
         }
 
         .report h1,
@@ -21,37 +43,184 @@
         .report h4,
         .report h5,
         .report h6 {
-            color: #111;
+            color: #0b1220;
+        }
+
+        .report.dark h1,
+        .report.dark h2,
+        .report.dark h3,
+        .report.dark h4,
+        .report.dark h5,
+        .report.dark h6 {
+            color: #e2e8f0;
+        }
+
+        .report p {
+            margin: 10px 0;
         }
 
         .report a {
-            color: #0b5fff;
+            color: #2563eb;
+        }
+
+        .report.dark a {
+            color: #7aa7d9;
         }
 
         .report code {
-            color: #111;
+            color: #0b1220;
+            background: #eef2f7;
+            padding: 0 4px;
+            border-radius: 4px;
+        }
+
+        .report.dark code {
+            color: #e2e8f0;
+            background: #0f172a;
         }
 
         .report pre {
             overflow-x: auto;
-            background: #f6f6f6;
-            padding: 10px;
-            border-radius: 8px;
-            color: #111;
+            background: #eef2f7;
+            padding: 12px;
+            border-radius: 10px;
+            color: #0b1220;
+        }
+
+        .report.dark pre {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .report blockquote {
+            margin: 12px 0;
+            padding: 8px 12px;
+            border-left: 3px solid #3b7c86;
+            background: #f1f5f9;
+            color: #1f2937;
+        }
+
+        .report.dark blockquote {
+            background: #0f1a2b;
+            color: #e2e8f0;
+        }
+
+        .report hr {
+            border: 0;
+            border-top: 1px solid #e2e8f0;
+            margin: 20px 0;
+        }
+
+        .report.dark hr {
+            border-top-color: #1f2a3a;
         }
 
         .report table {
             width: 100%;
             border-collapse: collapse;
             margin: 16px 0;
-            color: #111;
+            color: #0b1220;
+            font-size: 13px;
+        }
+
+        .report table td:first-child {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 12px;
+        }
+
+        .report thead th {
+            position: sticky;
+            top: 0;
+            background: #f1f5f9;
+            z-index: 1;
         }
 
         .report th,
         .report td {
-            border: 1px solid #e6e6e6;
+            border: 1px solid #e2e8f0;
             padding: 6px 8px;
             text-align: left;
+        }
+
+        .report tbody tr:nth-child(odd) {
+            background: #f6f8fb;
+        }
+
+        .report.dark table {
+            color: #e2e8f0;
+        }
+
+        .report.dark thead th {
+            background: #0f172a;
+        }
+
+        .report.dark th,
+        .report.dark td {
+            border-color: #1f2a3a;
+        }
+
+        .report.dark tbody tr:nth-child(odd) {
+            background: #0b1424;
+        }
+
+        .report .badge {
+            background: #eef2f7;
+            border-color: #cbd5e1;
+            color: #0b1220;
+        }
+
+        .report .badge.low {
+            background: #e7f7ee;
+            border-color: #86efac;
+            color: #14532d;
+        }
+
+        .report .badge.medium {
+            background: #fff4d6;
+            border-color: #facc15;
+            color: #713f12;
+        }
+
+        .report .badge.high {
+            background: #ffe8d6;
+            border-color: #fdba74;
+            color: #7c2d12;
+        }
+
+        .report .badge.critical {
+            background: #ffe4e6;
+            border-color: #fecaca;
+            color: #7f1d1d;
+        }
+
+        .report.dark .badge {
+            background: #0f1a2b;
+            border-color: #1f2a3a;
+            color: #e2e8f0;
+        }
+
+        .report.dark .badge.low {
+            background: #0e2a1d;
+            border-color: #1f4732;
+            color: #86efac;
+        }
+
+        .report.dark .badge.medium {
+            background: #2a240f;
+            border-color: #5a4a1a;
+            color: #fde68a;
+        }
+
+        .report.dark .badge.high {
+            background: #331a0b;
+            border-color: #7c2d12;
+            color: #fdba74;
+        }
+
+        .report.dark .badge.critical {
+            background: #2c1116;
+            border-color: #7f1d1d;
+            color: #fecaca;
         }
 
         .toc-list {
@@ -100,6 +269,7 @@
                 </div>
                 <div class="actions">
                     <a class="btn secondary" data-i18n="common.back_dashboard" href="dashboard.html">Back to dashboard</a>
+                    <button class="btn secondary" id="report-theme-toggle" type="button" data-i18n="report.toggle_dark">Dark report</button>
                     <button class="btn secondary" id="lang-toggle" type="button">ES</button>
                 </div>
             </div>
@@ -126,10 +296,31 @@
             var fileLabel = document.getElementById("file-label");
             var tocCard = document.getElementById("toc-card");
             var tocList = document.getElementById("toc-list");
+            var themeToggle = document.getElementById("report-theme-toggle");
+            var reportTheme = localStorage.getItem("report_theme") || "light";
 
             function t(key, fallback) {
                 if (window.i18n && window.i18n.t) return window.i18n.t(key);
                 return fallback || key;
+            }
+
+            function applyTheme() {
+                if (reportTheme === "dark") {
+                    reportEl.classList.add("dark");
+                } else {
+                    reportEl.classList.remove("dark");
+                }
+                if (themeToggle) {
+                    themeToggle.textContent = reportTheme === "dark" ? t("report.toggle_light", "Light report") : t("report.toggle_dark", "Dark report");
+                }
+            }
+
+            if (themeToggle) {
+                themeToggle.addEventListener("click", function () {
+                    reportTheme = reportTheme === "dark" ? "light" : "dark";
+                    localStorage.setItem("report_theme", reportTheme);
+                    applyTheme();
+                });
             }
 
             function isSafePath(path) {
@@ -192,6 +383,8 @@
                 });
             }
 
+            applyTheme();
+
             if (!isSafePath(file)) {
                 statusEl.textContent = t("report.invalid_file", "Invalid file. Use ?file=reports/before.md");
                 return;
@@ -212,6 +405,7 @@
                     }
                     applyBadges();
                     buildToc();
+                    applyTheme();
                 })
                 .catch(function () {
                     statusEl.textContent = t("report.load_error", "Could not load report. Verify file in docs/reports.");

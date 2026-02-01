@@ -1,12 +1,11 @@
 (function () {
     var stored = localStorage.getItem("lang");
-    var browser = (navigator.language || "en").toLowerCase();
-    var lang = stored || (browser.indexOf("es") === 0 ? "es" : "en");
+    var lang = stored === "en" || stored === "es" ? stored : "es";
     var dict = null;
 
     function t(key) {
-        if (!dict || !dict[lang]) return key;
-        return dict[lang][key] || key;
+        if (!dict) return key;
+        return dict[key] || key;
     }
 
     function apply() {
@@ -32,7 +31,7 @@
         window.i18n = { lang: lang, t: t };
     }
 
-    fetch("i18n.json", { cache: "no-store" })
+    fetch("i18n/" + lang + ".json", { cache: "no-store" })
         .then(function (res) { return res.ok ? res.json() : null; })
         .then(function (data) {
             if (!data) return;
