@@ -182,8 +182,8 @@
     "exposed_no": 4,
     "exposed_yes": 8
   },
-  "generated_at": "2026-02-01T04:49:43Z",
-  "git_sha": "b6805f5",
+  "generated_at": "2026-02-01T06:15:27Z",
+  "git_sha": "0854f6a",
   "input_fingerprint": "632306f5c881dbc318774567b562291aab8b4433c4ed04521276c8715dee4dd9",
   "overall_score": 64.17,
   "reports": {
@@ -195,7 +195,7 @@
     "diff": "reports/diff.md"
   },
   "risk_reduction": 16.67,
-  "run_id": "2026-02-01T04:49:43Z-b6805f5",
+  "run_id": "2026-02-01T06:15:27Z-0854f6a",
   "top5": [
     {
       "device_id": "cam-001",
