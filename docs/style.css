@@ -16,6 +16,18 @@
 * {
   box-sizing: border-box;
 }
+html::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27240%27%20height%3D%27240%27%20viewBox%3D%270%200%20240%20240%27%3E%3Crect%20width%3D%27240%27%20height%3D%27240%27%20fill%3D%27none%27/%3E%3Ctext%20x%3D%274%27%20y%3D%2720%27%20font-family%3D%27monospace%27%20font-size%3D%2710%27%20fill%3D%27%2394a3b8%27%20fill-opacity%3D%270.16%27%3E0101%201100%201010%200110%3C/text%3E%3Ctext%20x%3D%274%27%20y%3D%2744%27%20font-family%3D%27monospace%27%20font-size%3D%2710%27%20fill%3D%27%2394a3b8%27%20fill-opacity%3D%270.14%27%3Eecho%20risk%20scan%20ok%3C/text%3E%3Ctext%20x%3D%274%27%20y%3D%2768%27%20font-family%3D%27monospace%27%20font-size%3D%2710%27%20fill%3D%27%2394a3b8%27%20fill-opacity%3D%270.12%27%3Edev%20id%20check%3A%200x3f%3C/text%3E%3Ctext%20x%3D%274%27%20y%3D%2792%27%20font-family%3D%27monospace%27%20font-size%3D%2710%27%20fill%3D%27%2394a3b8%27%20fill-opacity%3D%270.1%27%3Efw%20ver%201.2.3%3C/text%3E%3Ctext%20x%3D%274%27%20y%3D%27116%27%20font-family%3D%27monospace%27%20font-size%3D%2710%27%20fill%3D%27%2394a3b8%27%20fill-opacity%3D%270.12%27%3Eexposed%3Dfalse%20tls%3Dtrue%3C/text%3E%3Ctext%20x%3D%274%27%20y%3D%27140%27%20font-family%3D%27monospace%27%20font-size%3D%2710%27%20fill%3D%27%2394a3b8%27%20fill-opacity%3D%270.1%27%3Erisk%20score%3A%2042%3C/text%3E%3C/svg%3E");
+  background-size: 240px 240px;
+  background-repeat: repeat;
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 0;
+  animation: code-drift 18s linear infinite;
+}
 body {
   margin: 0;
   font-family: "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
@@ -31,7 +43,7 @@ body::before {
   background-size: 28px 28px;
   opacity: 0.18;
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
 }
 body::after {
   content: "";
@@ -53,14 +65,14 @@ body::after {
     );
   opacity: 0.07;
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
 }
 .app {
   min-height: 100vh;
   display: grid;
   grid-template-columns: 240px 1fr;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 .sidebar {
   background: var(--bg-2);
@@ -183,13 +195,12 @@ body::after {
   padding-left: 18px;
 }
 .table-wrap {
-  overflow-x: auto;
   width: 100%;
 }
 .table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
+  table-layout: auto;
 }
 .table thead th {
   background: var(--panel-2);
@@ -202,11 +213,9 @@ body::after {
   border-bottom: 1px solid var(--border);
   text-align: left;
   vertical-align: top;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   word-break: break-word;
-}
-.table td {
-  max-width: 0;
+  white-space: normal;
 }
 .table tbody tr:nth-child(odd) {
   background: #0f1824;
@@ -309,3 +318,7 @@ code {
   }
 }
 
+@keyframes code-drift {
+  from { background-position: 0 0; }
+  to { background-position: 0 -240px; }
+}
